@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.yearcon.yrcocrmapi.modules.dsb.mapper.VIPInfoDao" >
+
+    <select id="findByUsernameAndDate" resultType="VIPInfo" parameterType="java.lang.String">
+        SELECT  t.id,
+        t.cardno,
+        t.vipname,
+        t.sex,
+        t.birthday,
+        t.integral,
+        t.is_verify AS is_verify,
+        aa.lastdate AS lastdate,
+        t.mobil AS  mobile,
+        b.name   AS cardType
+        FROM m_retail a, hr_employee hr, c_client_vip t,
+        fa_vipacc    aa,
+        c_viptype    b
+        where
+        t.c_viptype_id = b.id
+        AND t.id = aa.c_vip_id and hr.id = a.salesrep_id AND t.id=a.c_vip_id
+        and  (a.billdate !=  #{nowDate}
+        and a.billdate =  #{lastDate} )
+        AND a.status = 2 and hr.no=#{username}
+    </select>
+</mapper>

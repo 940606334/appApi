@@ -1,5 +1,6 @@
 package cn.yearcon.yrcocrmapi;
 
+import cn.yearcon.yrcocrmapi.modules.service.SmsService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -11,6 +12,7 @@ public class YrcocrmapiApplicationTests {
 
 	@Test
 	public void contextLoads() {
+
 	}
 
 }

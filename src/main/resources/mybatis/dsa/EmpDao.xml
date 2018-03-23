@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.yearcon.yrcocrmapi.modules.dsa.mapper.EmpDao" >
+    <resultMap id="BaseResultMap" type="cn.yearcon.yrcocrmapi.modules.dsa.entity.AppEmployee" >
+        <id column="id" property="id"  />
+        <result column="mobile" property="mobile"  />
+        <result column="login_date" property="loginDate"  />
+        <result column="create_date" property="createDate"  />
+        <result column="update_date" property="updateDate" />
+        <result column="username" property="username" />
+        <result column="password" property="password" />
+        <result column="private_key" property="key" />
+        <result column="login_times" property="loginTimes" />
+        <result column="c_customer_id" property="cCustomerId"  />
+        <result column="c_customerup_id" property="cCustomerupId" />
+        <result column="available" property="available" />
+        <result column="remark" property="remark" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        id, mobile, username, c_customer_id, c_customerup_id,password,create_date,update_date,
+        login_date,private_key,login_times,available,remark
+    </sql>
+    <select id="findOne" resultMap="BaseResultMap" parameterType="Integer">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM app_employee
+        WHERE id = #{id}
+    </select>
+    <select id="findByUsername" resultMap="BaseResultMap" parameterType="String">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM app_employee
+        WHERE username = #{username}
+    </select>
+    <insert id="insert" parameterType="AppEmployee">
+        INSERT INTO app_employee(
+          mobile,
+          username,
+          password,
+          private_key,
+          c_customer_id,
+          c_customerup_id,
+          available,
+          login_date,
+          create_date,
+          update_date,
+          login_times
+        )VALUES(
+          #{mobile},
+          #{username},
+          #{password},
+          #{key},
+          #{cCustomerId},
+          #{cCustomerupId},
+          '1',
+          now(),
+          now(),
+          now(),
+          0
+        )
+    </insert>
+    <update id="update" parameterType="AppEmployee">
+        UPDATE app_employee SET
+          password=#{password},
+          login_date=#{loginDate},
+          update_date=#{updateDate},
+          login_times=#{loginTimes}
+          WHERE id=#{id}
+    </update>
+</mapper>
