@@ -23,7 +23,7 @@ import springfox.documentation.spring.web.json.Json;
  **/
 @RestController
 @Api(description = "辅助功能接口(注册,登录,修改密码,验证码)")
-@RequestMapping(value = "aide")
+@RequestMapping(value = "aided")
 public class AidedController {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());

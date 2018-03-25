@@ -1,6 +1,7 @@
 package cn.yearcon.yrcocrmapi.modules.web;
 
 import io.swagger.annotations.Api;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
  **/
 @RestController
 @Api(description = "我的指标(设置日工资,获取业绩,获取开卡指标)")
+@RequestMapping(value="target")
 public class TargetController {
 
 }

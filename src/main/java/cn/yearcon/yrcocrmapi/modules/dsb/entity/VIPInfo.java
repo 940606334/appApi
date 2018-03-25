@@ -16,11 +16,12 @@ public class VIPInfo {
     private String vipname;  //--姓名
     private String sex; //---性别
     private String birthday;// ---生日
-    private String integral; // ---当前积分
+    private Integer integral; // ---当前积分
     private String is_verify;//---是否认证
     private String lastdate; //--最后一次购买时间
     private String mobile;  //---会员手机
     private String cardType;   // ---卡类型
+    private String vip_status;
 
     @Override
     public String toString() {
@@ -35,6 +36,7 @@ public class VIPInfo {
                 ", lastdate='" + lastdate + '\'' +
                 ", mobile='" + mobile + '\'' +
                 ", cardType='" + cardType + '\'' +
+                ", vip_status='" + vip_status + '\'' +
                 '}';
     }
 }

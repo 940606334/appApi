@@ -23,4 +23,32 @@
         and a.billdate =  #{lastDate} )
         AND a.status = 2 and hr.no=#{username}
     </select>
+
+    <resultMap id="cursorMap" type="java.util.HashMap">
+        <result column ="id" property="id" />
+        <result column ="cardno" property="cardno" />
+        <result column ="vipname" property="vipname"/>
+        <result column ="sex" property="sex"  />
+        <result column ="birthday" property="birthday" />
+        <result column ="integral" property="integral" />
+        <result column ="is_verify" property="is_verify" />
+        <result column ="lastdate" property="lastdate" />
+        <result column ="mobil" property="mobile" />
+        <result column ="name" property="cardType" />
+        <result column ="VIP_STATUS" property="vip_status"/>
+    </resultMap>
+    <select id="getVIPByStoreid" statementType="CALLABLE" resultMap="cursorMap">
+       <![CDATA[
+        {call yek_store_getvip(#{v_hr_code, jdbcType=VARCHAR, mode=IN},
+                              #{v_hr_store, jdbcType=NUMERIC, mode=IN},
+                              #{ref_cursor, mode=OUT, jdbcType=CURSOR})}
+    ]]>
+    </select>
+    <!--<resultMap id="storeList" type=""></resultMap>
+    <select id="getStoreid" statementType="CALLABLE" resultMap="storeList">
+        <![CDATA[
+        {call yek_hr_getvipstore(#{v_hr_code, jdbcType=VARCHAR, mode=IN},
+                              #{ref_cursor, mode=OUT, jdbcType=CURSOR, resultMap=storeList})}
+    ]]>
+    </select>-->
 </mapper>
