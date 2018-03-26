@@ -111,4 +111,13 @@ public class AppEmpService {
         byUsername.setUpdateDate(new Date());
         return new JsonResult(1,"修改成功");
     }
+
+    /**
+     * 根据用户名获取员工信息
+     * @param username
+     * @return
+     */
+    public  AppEmployee findByUsername(String username){
+        return  empDao.findByUsername(username);
+    }
 }

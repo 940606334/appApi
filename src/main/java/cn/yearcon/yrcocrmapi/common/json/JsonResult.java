@@ -16,7 +16,7 @@ public class JsonResult {
     private Integer status;
     private List list=new ArrayList();
     private String msg;
-    private Map map=new HashMap<>();
+    private Object data;
     private String key;
 
     public JsonResult(Integer status, String msg, String key) {
@@ -25,9 +25,9 @@ public class JsonResult {
         this.key = key;
     }
 
-    public JsonResult(Integer status, Map map) {
+    public JsonResult(Integer status, Object data) {
         this.status = status;
-        this.map = map;
+        this.data = data;
     }
 
     public JsonResult(Integer status, String msg) {

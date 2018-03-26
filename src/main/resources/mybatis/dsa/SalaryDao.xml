@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.yearcon.yrcocrmapi.modules.dsa.mapper.SalaryDao" >
+
+    <sql id="Base_Column_List" >
+        id AS id,
+        webid AS webid,
+        emp_number AS empNumber,
+        name AS name,
+        belong_shop AS belongShop,
+        rate AS rate,
+        add_time AS addTime,
+        update_time AS updateTime,
+        target AS target,
+        fixed_value0 AS fixedValue0,
+        fixed_value1 AS fixedValue1,
+        fixed_value2 AS fixedValue2,
+        fixed_value3 AS fixedValue3,
+        fixed_value4 AS fixedValue4,
+        fixed_value5 AS fixedValue5,
+        fixed_value6 AS fixedValue6,
+        fixed_value7 AS fixedValue7,
+        fixed_value8 AS fixedValue8,
+        fixed_value9 AS fixedValue9,
+        fixed_value10 AS fixedValue10,
+        fixed_value11 AS fixedValue11,
+        fixed_value12 AS fixedValue12,
+        fixed_value13 AS fixedValue13,
+        fixed_value14 AS fixedValue14
+    </sql>
+    <select id="get" resultType="Salary" parameterType="Integer">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM app_salary
+        WHERE id = #{id}
+    </select>
+    <select id="findByUsername" resultType="Salary" parameterType="String">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM app_salary
+        WHERE emp_number = #{username}
+    </select>
+    <!--<insert id="insert" parameterType="TargetSalary">
+        INSERT INTO app_salary(
+          username,
+          target_salary,
+          update_date,
+          webid
+        )VALUES(
+          #{username},
+          #{targetSalary},
+          #{updateDate},
+          #{webid}
+        )
+    </insert>-->
+    <!--<update id="update" parameterType="TargetSalary">
+        UPDATE app_salary SET
+          target_salary=#{targetSalary},
+          update_date=#{updateDate},
+          WHERE id=#{id}
+    </update>-->
+</mapper>

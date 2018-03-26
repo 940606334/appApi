@@ -58,4 +58,5 @@ public class VIPInfoMapper {
         }
         return list;
     }
+
 }

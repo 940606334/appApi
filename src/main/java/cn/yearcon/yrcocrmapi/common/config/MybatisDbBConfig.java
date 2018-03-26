@@ -13,6 +13,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 
 
 import javax.sql.DataSource;
@@ -49,7 +50,11 @@ public class MybatisDbBConfig {
         return factoryBean.getObject();
 
     }
-
+    @Bean(name = "ds2TransactionManager")
+    @Primary
+    public DataSourceTransactionManager testTransactionManager(@Qualifier("ds2") DataSource dataSource) {
+        return new DataSourceTransactionManager(dataSource);
+    }
     @Bean(name = "sqlSessionTemplate2")
     @Primary
     public SqlSessionTemplate sqlSessionTemplate2(@Qualifier("sqlSessionFactory2")SqlSessionFactory sqlSessionFactory) throws Exception {

@@ -1,5 +1,6 @@
 package cn.yearcon.yrcocrmapi.service;
 
+import ch.qos.logback.core.net.SyslogOutputStream;
 import cn.yearcon.yrcocrmapi.modules.service.SmsService;
 import com.google.common.math.IntMath;
 import lombok.experimental.var;
@@ -44,5 +45,11 @@ public class TestService {
         String lastDate=sdf.format(last);
         System.out.println("当前时间:"+nowDate);
         System.out.println("前七天:"+lastDate);
+    }
+    @Test
+    public void test3(){
+        int i=3;
+         int max=i>0?i:0;
+         System.out.println(max);
     }
 }
