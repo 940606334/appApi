@@ -69,6 +69,7 @@ public class VIPInfoService {
         if(list.size()==0){
             return new JsonResult(0,"未找到记录");
         }
+        logger.info(list.toString());
         return new JsonResult(1,list);
     }
 

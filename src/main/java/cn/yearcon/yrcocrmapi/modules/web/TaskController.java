@@ -1,7 +1,10 @@
 package cn.yearcon.yrcocrmapi.modules.web;
 
 import cn.yearcon.yrcocrmapi.common.json.JsonResult;
+import cn.yearcon.yrcocrmapi.modules.dsa.service.TaskStatusService;
 import cn.yearcon.yrcocrmapi.modules.dsb.service.VIPInfoService;
+import cn.yearcon.yrcocrmapi.modules.entity.VIPStatus;
+import cn.yearcon.yrcocrmapi.modules.service.VIPService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
@@ -24,8 +27,12 @@ public class TaskController {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
     @Autowired
     private VIPInfoService vipInfoService;
+    @Autowired
+    private VIPService vipService;
+    @Autowired
+    TaskStatusService taskStatusService;
 
-    @ApiOperation(value = "查看消费信息",notes = "查看过去七天消费信息")
+    @ApiOperation(value = "获取7天前消费会员",notes = "查看过去七天消费信息")
     @RequestMapping(value = "last.info" ,method = {RequestMethod.GET,RequestMethod.POST})
     public JsonResult getVIPInfo(String username){
         logger.info("username="+username);
@@ -47,5 +54,25 @@ public class TaskController {
         JsonResult jsonResult=vipInfoService.getVIPInfoByStoreid(username,storeid);
         logger.info(jsonResult.toString());
         return jsonResult;
+    }
+    @ApiOperation(value = "查看会员状态列表",notes = "查看会员状态列表")
+    @RequestMapping(value = "vipstatus.list" ,method = {RequestMethod.GET,RequestMethod.POST})
+    public  JsonResult getVIPStatusList(String username,Integer storeid){
+        logger.info("username="+username+",storeid="+storeid);
+        if (username==null||"".equals(username.trim())){
+            return  new JsonResult(0,"参数不能为空");
+        }
+        if (storeid==null){
+            return  new JsonResult(0,"参数不能为空");
+        }
+        VIPStatus vipStatus = vipService.vipList(username, storeid);
+        logger.info(vipStatus.toString());
+        return new JsonResult(1,vipStatus);
+    }
+    @ApiOperation(value ="唤醒会员",notes = "根据会员id,唤醒会员")
+    @RequestMapping(value = "waken.vip",method = {RequestMethod.GET,RequestMethod.POST})
+    public JsonResult wakenVip(Integer vipid){
+        taskStatusService.wakenVip(vipid);
+        return new JsonResult(1,"已唤醒");
     }
 }

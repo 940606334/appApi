@@ -4,6 +4,9 @@ import cn.yearcon.yrcocrmapi.modules.dsa.entity.Salary;
 import cn.yearcon.yrcocrmapi.modules.dsa.entity.SalaryItem;
 import cn.yearcon.yrcocrmapi.modules.dsa.mapper.SalaryDao;
 import cn.yearcon.yrcocrmapi.modules.dsa.mapper.SalaryitemDao;
+import cn.yearcon.yrcocrmapi.modules.dsb.entity.CardTarget;
+import cn.yearcon.yrcocrmapi.modules.dsb.entity.Performance;
+import cn.yearcon.yrcocrmapi.modules.dsb.mapper.PerformanceDao;
 import io.swagger.annotations.ApiOperation;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -34,5 +37,14 @@ public class TestDao {
     public void test2(){
         List<SalaryItem> list=salaryitemDao.findByWebid("2332");
         System.out.println(list.size());
+    }
+    @Autowired
+    private PerformanceDao performanceDao;
+    @Test
+    public void test3(){
+        /*List<Performance> performance = performanceDao.getPerformance("20180101", "20180327", "888888");
+        System.out.println(performance);*/
+        List<CardTarget> cardTarget = performanceDao.getCardTarget("888888", 0);
+        System.out.println(cardTarget);
     }
 }

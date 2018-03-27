@@ -1,6 +1,8 @@
 package cn.yearcon.yrcocrmapi.modules.web;
 
 import cn.yearcon.yrcocrmapi.common.json.JsonResult;
+import cn.yearcon.yrcocrmapi.modules.dsa.service.TaskStatusService;
+import cn.yearcon.yrcocrmapi.modules.service.PerformanceService;
 import cn.yearcon.yrcocrmapi.modules.service.SetTargetService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -8,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import sun.misc.Perf;
 
 /**
  * 我的指标
@@ -21,9 +24,24 @@ import org.springframework.web.bind.annotation.RestController;
 public class TargetController {
     @Autowired
     SetTargetService setTargetService;
+    @Autowired
+    PerformanceService performanceService;
+
     @RequestMapping(value = "salary.set",method = {RequestMethod.GET,RequestMethod.POST})
     @ApiOperation(value ="设置日工资",notes = "输入今日目标工资")
     public JsonResult getTarget(String username,Double targetSalary){
         return setTargetService.setTargetAndCalculateInfo(username,targetSalary);
     }
+    @ApiOperation(value ="获取员工业绩",notes = "输入员工账号和日期")
+    @RequestMapping(value = "performance.get",method = {RequestMethod.GET,RequestMethod.POST})
+    public JsonResult getPerformance(String username,String beginDate,String endDate){
+        return performanceService.getPerformance(username,beginDate,endDate);
+    }
+
+    @ApiOperation(value ="获取开卡指标",notes = "输入员工账号和日日期")
+    @RequestMapping(value = "opencard.target",method = {RequestMethod.GET,RequestMethod.POST})
+    public JsonResult getCardtarget(String username,Integer date){
+        return performanceService.getCardTarget(username,date);
+    }
+
 }
