@@ -6,7 +6,9 @@ import cn.yearcon.yrcocrmapi.modules.dsa.mapper.SalaryDao;
 import cn.yearcon.yrcocrmapi.modules.dsa.mapper.SalaryitemDao;
 import cn.yearcon.yrcocrmapi.modules.dsb.entity.CardTarget;
 import cn.yearcon.yrcocrmapi.modules.dsb.entity.Performance;
+import cn.yearcon.yrcocrmapi.modules.dsb.entity.Store;
 import cn.yearcon.yrcocrmapi.modules.dsb.mapper.PerformanceDao;
+import cn.yearcon.yrcocrmapi.modules.dsb.mapper.StoreDao;
 import io.swagger.annotations.ApiOperation;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -46,5 +48,12 @@ public class TestDao {
         System.out.println(performance);*/
         List<CardTarget> cardTarget = performanceDao.getCardTarget("888888", 0);
         System.out.println(cardTarget);
+    }
+    @Autowired
+    StoreDao storeDao;
+    @Test
+    public  void test4(){
+        Store byUsername = storeDao.findByUsername("888888");
+        System.out.println(byUsername);
     }
 }

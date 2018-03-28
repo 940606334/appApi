@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.yearcon.yrcocrmapi.modules.dsa.mapper.TaskStatusDao" >
+
+    <sql id="Base_Column_List" >
+        webid AS webid,
+        username AS username,
+        vipid AS vipid,
+        status AS status,
+        total_times AS totalTimes,
+        update_date AS updateDate
+    </sql>
+    <!--<select id="get" resultType="Usertaskstatus" parameterType="Integer">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM app_usertaskstatus
+        WHERE id = #{id}
+    </select>-->
+    <select id="findByVipid" resultType="Usertaskstatus" parameterType="Integer">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM app_usertaskstatus
+        WHERE vipid = #{vipid}
+    </select>
+    <insert id="insert" parameterType="Usertaskstatus">
+        INSERT INTO app_usertaskstatus(
+          username,
+          vipid,
+          status,
+          webid,
+          total_times,
+          update_date
+        )VALUES(
+          #{username},
+          #{vipid},
+          #{status},
+          #{webid},
+          #{totalTimes},
+          #{updateDate}
+        )
+    </insert>
+    <update id="update" parameterType="Usertaskstatus">
+        UPDATE app_usertaskstatus SET
+          status=#{status},
+          total_times=#{totalTimes},
+          update_date=#{updateDate}
+          WHERE vipid=#{vipid}
+    </update>
+</mapper>

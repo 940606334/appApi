@@ -29,7 +29,7 @@ public class SwaggerConfig {
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
                 .title("YRC门店APP接口")
-                .description("rest api 文档构建利器")
+                .description("测试账号:888888 密码:123456 门店id:9582")
                 .termsOfServiceUrl("http://blog.csdn.net/itguangit")
                 .contact("ayong")
                 .version("1.0")

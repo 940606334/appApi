@@ -50,6 +50,8 @@ public class JsonResult {
                 "status=" + status +
                 ", list=" + list +
                 ", msg='" + msg + '\'' +
+                ", data=" + data +
+                ", key='" + key + '\'' +
                 '}';
     }
 }

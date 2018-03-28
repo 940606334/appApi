@@ -1,6 +1,7 @@
 package cn.yearcon.yrcocrmapi.modules.dsb.service;
 
 import cn.yearcon.yrcocrmapi.common.json.JsonResult;
+import cn.yearcon.yrcocrmapi.modules.dsb.entity.VIPCost;
 import cn.yearcon.yrcocrmapi.modules.dsb.entity.VIPInfo;
 import cn.yearcon.yrcocrmapi.modules.dsb.mapper.VIPInfoDao;
 import cn.yearcon.yrcocrmapi.modules.dsb.mapper.VIPInfoMapper;
@@ -73,4 +74,33 @@ public class VIPInfoService {
         return new JsonResult(1,list);
     }
 
+    /**
+     * 根据id获取会员详情
+     * @param id
+     * @return
+     */
+    public JsonResult getVIPById(Integer id){
+        logger.info("vipid="+id);
+        VIPInfo vipInfo =vipInfoDao.findByVipid(id);
+        if (vipInfo==null){
+            return new JsonResult(0,"未找到记录");
+        }
+        logger.info(vipInfo.toString());
+        return new JsonResult(1,vipInfo);
+    }
+
+    /**
+     * 根据会员id查询三个月内消费记录
+     * @param vipid
+     * @return
+     */
+    public JsonResult findCostById(Integer vipid){
+        logger.info("vipid="+vipid);
+        List<VIPCost> vipInfo =vipInfoDao.findCostById(vipid);
+        if (vipInfo.size()==0){
+            return new JsonResult(0,"未找到记录");
+        }
+        logger.info(vipInfo.toString());
+        return new JsonResult(1,vipInfo);
+    }
 }

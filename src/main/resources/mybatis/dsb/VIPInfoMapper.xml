@@ -23,32 +23,98 @@
         and a.billdate =  #{lastDate} )
         AND a.status = 2 and hr.no=#{username}
     </select>
-
-    <resultMap id="cursorMap" type="java.util.HashMap">
-        <result column ="id" property="id" />
-        <result column ="cardno" property="cardno" />
-        <result column ="vipname" property="vipname"/>
-        <result column ="sex" property="sex"  />
-        <result column ="birthday" property="birthday" />
-        <result column ="integral" property="integral" />
-        <result column ="is_verify" property="is_verify" />
-        <result column ="lastdate" property="lastdate" />
-        <result column ="mobil" property="mobile" />
-        <result column ="name" property="cardType" />
-        <result column ="VIP_STATUS" property="vip_status"/>
-    </resultMap>
-    <select id="getVIPByStoreid" statementType="CALLABLE" resultMap="cursorMap">
-       <![CDATA[
-        {call yek_store_getvip(#{v_hr_code, jdbcType=VARCHAR, mode=IN},
-                              #{v_hr_store, jdbcType=NUMERIC, mode=IN},
-                              #{ref_cursor, mode=OUT, jdbcType=CURSOR})}
-    ]]>
+    
+    <select id="findByVipid" resultType="VIPInfo" parameterType="Integer">
+        SELECT n.id AS id,
+        d.name,
+        e.no,
+        e.id salesid,
+        a.docno,
+        a.billdate AS lastdate,
+        nvl(a.statustime,sysdate)  statustime,
+        n.integral,
+        n.mobil AS mobile,
+        n.birthday,
+        n.cardno,
+        n.is_verify,
+        n.sex,
+        cv.name        AS cardType,
+        n.vipname,
+        a.tot_amt_actual AS tot_amt_actual,
+        listagg(c.no || '(' || regexp_replace(b.value, '[0-9]', '') || ')',
+        ',') within GROUP(ORDER BY c.no) AS mptno
+        FROM c_client_vip n
+        LEFT JOIN c_viptype cv
+        ON (n.c_viptype_id = cv.id)
+        LEFT JOIN m_retail a ON (a.c_vip_id = n.id AND a.status = 2)
+        LEFT JOIN c_store d
+        ON (n.c_store_id = d.id)
+        LEFT JOIN m_retailitem f
+        ON (a.id = f.m_retail_id)
+        LEFT JOIN hr_employee e
+        ON (a.salesrep_id = e.id)
+        LEFT JOIN m_product b
+        ON (f.m_product_id = b.id)
+        LEFT JOIN m_product_alias c
+        ON (f.m_product_id = c.m_product_id AND
+        f.m_attributesetinstance_id = c.m_attributesetinstance_id)
+        WHERE n.id= #{vipid}
+        AND rownum=1
+        GROUP BY n.id,
+        d.name,
+        a.docno,
+        a.billdate,
+        a.statustime,
+        e.no,
+        e.id,
+        n.birthday,
+        n.cardno,
+        n.is_verify,
+        n.sex,
+        n.mobil,
+        n.vipname,
+        n.integral,
+        a.tot_amt_actual,cv.name
+        ORDER BY a.billdate DESC
     </select>
-    <!--<resultMap id="storeList" type=""></resultMap>
-    <select id="getStoreid" statementType="CALLABLE" resultMap="storeList">
-        <![CDATA[
-        {call yek_hr_getvipstore(#{v_hr_code, jdbcType=VARCHAR, mode=IN},
-                              #{ref_cursor, mode=OUT, jdbcType=CURSOR, resultMap=storeList})}
-    ]]>
-    </select>-->
+    
+    <select id="findCostById" resultType="VIPCost" parameterType="Integer">
+        SELECT a.c_vip_id AS vipid,
+        d.name AS storename,
+        e.no AS salesname,
+        e.id salesid,
+        a.docno,
+        a.billdate,
+        a.statustime,
+        a.tot_amt_actual AS totamtactual,
+        listagg(c.no || '(' || regexp_replace(b.value, '[0-9]', '') || ')',
+        ',') within GROUP(ORDER BY c.no) AS mptno
+        FROM m_retail a
+        INNER JOIN c_store d
+        ON (a.c_store_id = d.id)
+        INNER JOIN m_retailitem f
+        ON (a.id = f.m_retail_id)
+        LEFT JOIN hr_employee e
+        ON (a.salesrep_id = e.id)
+        INNER JOIN m_product b
+        ON (f.m_product_id = b.id)
+        INNER JOIN m_product_alias c
+        ON (f.m_product_id = c.m_product_id AND
+        f.m_attributesetinstance_id = c.m_attributesetinstance_id)
+        LEFT JOIN c_client_vip n
+        ON (a.c_vip_id = n.id)
+        WHERE a.c_vip_id = #{vipid}
+        AND a.status = 2
+        GROUP BY a.c_vip_id,
+        d.name,
+        a.docno,
+        a.billdate,
+        a.statustime,
+        e.no,
+        e.id,
+        a.integral,
+        n.integral,
+        a.tot_amt_actual
+        ORDER BY a.statustime DESC
+    </select>
 </mapper>

@@ -3,6 +3,7 @@ package cn.yearcon.yrcocrmapi.modules.web;
 import cn.yearcon.yrcocrmapi.common.json.JsonResult;
 import cn.yearcon.yrcocrmapi.modules.dsa.service.TaskStatusService;
 import cn.yearcon.yrcocrmapi.modules.dsb.service.VIPInfoService;
+import cn.yearcon.yrcocrmapi.modules.entity.DefinedSearch;
 import cn.yearcon.yrcocrmapi.modules.entity.VIPStatus;
 import cn.yearcon.yrcocrmapi.modules.service.VIPService;
 import io.swagger.annotations.Api;
@@ -31,32 +32,8 @@ public class TaskController {
     private VIPService vipService;
     @Autowired
     TaskStatusService taskStatusService;
-
-    @ApiOperation(value = "获取7天前消费会员",notes = "查看过去七天消费信息")
-    @RequestMapping(value = "last.info" ,method = {RequestMethod.GET,RequestMethod.POST})
-    public JsonResult getVIPInfo(String username){
-        logger.info("username="+username);
-        if (username==null||"".equals(username.trim())){
-            return  new JsonResult(0,"参数不能为空");
-        }
-        return vipInfoService.getVIPInfoByUsername(username);
-    }
-    @ApiOperation(value = "查看员工所在店仓的vip档案",notes = "获取该员工所在店仓的vip档案")
-    @RequestMapping(value = "vipinfo.store" ,method = {RequestMethod.GET,RequestMethod.POST})
-    public JsonResult getVIPInfoByStoreid(String username,Integer storeid){
-        logger.info("username="+username+",storeid="+storeid);
-        if (username==null||"".equals(username.trim())){
-            return  new JsonResult(0,"参数不能为空");
-        }
-        if (storeid==null){
-            return  new JsonResult(0,"参数不能为空");
-        }
-        JsonResult jsonResult=vipInfoService.getVIPInfoByStoreid(username,storeid);
-        logger.info(jsonResult.toString());
-        return jsonResult;
-    }
     @ApiOperation(value = "查看会员状态列表",notes = "查看会员状态列表")
-    @RequestMapping(value = "vipstatus.list" ,method = {RequestMethod.GET,RequestMethod.POST})
+    @RequestMapping(value = "vipstatus.list" ,method = {RequestMethod.GET})
     public  JsonResult getVIPStatusList(String username,Integer storeid){
         logger.info("username="+username+",storeid="+storeid);
         if (username==null||"".equals(username.trim())){
@@ -69,10 +46,69 @@ public class TaskController {
         logger.info(vipStatus.toString());
         return new JsonResult(1,vipStatus);
     }
+    @ApiOperation(value = "获取7天前消费会员",notes = "查看过去七天消费信息")
+    @RequestMapping(value = "vipinfo.sevenday" ,method = {RequestMethod.GET})
+    public JsonResult getVIPInfo(String username){
+        logger.info("username="+username);
+        if (username==null||"".equals(username.trim())){
+            return  new JsonResult(0,"参数不能为空");
+        }
+        return vipService.wakenSevenDaybackList(username);
+    }
+    @ApiOperation(value = "获取沉睡列表消费会员",notes = "根据会员状态获取不同列表 1.激活 2.流失 3.修眠 4.睡眠 5.开卡未消费")
+    @RequestMapping(value = "vipinfo.store" ,method = {RequestMethod.GET})
+    public JsonResult getVIPInfoByStoreid(String username,Integer storeid,String vipStatus){
+        logger.info("username="+username+",storeid="+storeid);
+        if (username==null||"".equals(username.trim())){
+            return  new JsonResult(0,"参数不能为空");
+        }
+        if (storeid==null){
+            return  new JsonResult(0,"参数不能为空");
+        }
+        JsonResult jsonResult=vipService.wakenVipStatusList(username,storeid,vipStatus);
+        logger.info(jsonResult.toString());
+        return jsonResult;
+    }
+    @ApiOperation(value = "获取7天内生日的会员信息",notes = "获取7天内生日的会员信息")
+    @RequestMapping(value = "vipinfo.birthday" ,method = {RequestMethod.GET})
+    public JsonResult getVIPInfoByBirthday(String username,Integer storeid){
+        logger.info("username="+username+",storeid="+storeid);
+        if (username==null||"".equals(username.trim())){
+            return  new JsonResult(0,"参数不能为空");
+        }
+        if (storeid==null){
+            return  new JsonResult(0,"参数不能为空");
+        }
+        JsonResult jsonResult=vipService.wakenBirthdayList(username,storeid);
+        logger.info(jsonResult.toString());
+        return jsonResult;
+    }
     @ApiOperation(value ="唤醒会员",notes = "根据会员id,唤醒会员")
-    @RequestMapping(value = "waken.vip",method = {RequestMethod.GET,RequestMethod.POST})
+    @RequestMapping(value = "waken.vip",method = {RequestMethod.GET})
     public JsonResult wakenVip(Integer vipid){
         taskStatusService.wakenVip(vipid);
         return new JsonResult(1,"已唤醒");
+    }
+    @ApiOperation(value ="会员详情",notes = "根据会员id查询会员详情")
+    @RequestMapping(value = "vipinfo.get",method = {RequestMethod.GET})
+    public JsonResult findByid(Integer vipid){
+        return vipInfoService.getVIPById(vipid);
+    }
+    @ApiOperation(value ="会员三个月内消费记录",notes = "根据会员id查询三个月内消费记录")
+    @RequestMapping(value = "vipcost.get",method = {RequestMethod.GET})
+    public JsonResult findCostByid(Integer vipid){
+        return vipInfoService.findCostById(vipid);
+    }
+    @ApiOperation(value ="高级自定义查询会员列表",notes = "高级自定义查询会员列表")
+    @RequestMapping(value = "viplist.search",method = {RequestMethod.GET})
+    public JsonResult findVipListDefind(String username, Integer storeid, DefinedSearch definedSearch){
+        logger.info("username="+username+",storeid="+storeid);
+        if (username==null||"".equals(username.trim())){
+            return  new JsonResult(0,"参数不能为空");
+        }
+        if (storeid==null){
+            return  new JsonResult(0,"参数不能为空");
+        }
+        return vipService.findVipListBySearch(username,storeid,definedSearch);
     }
 }

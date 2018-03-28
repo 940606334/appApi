@@ -1,5 +1,6 @@
 package cn.yearcon.yrcocrmapi.modules.dsb.mapper;
 
+import cn.yearcon.yrcocrmapi.modules.dsb.entity.VIPCost;
 import cn.yearcon.yrcocrmapi.modules.dsb.entity.VIPInfo;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -14,5 +15,7 @@ public interface VIPInfoDao {
             @Param("nowDate") String nowDate,
             @Param("lastDate") String lastDate);
 
+    VIPInfo findByVipid(@Param("vipid") Integer vipid);
 
+    List<VIPCost> findCostById(@Param("vipid") Integer vipid);
 }

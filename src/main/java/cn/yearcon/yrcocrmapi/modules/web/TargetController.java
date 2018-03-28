@@ -2,6 +2,7 @@ package cn.yearcon.yrcocrmapi.modules.web;
 
 import cn.yearcon.yrcocrmapi.common.json.JsonResult;
 import cn.yearcon.yrcocrmapi.modules.dsa.service.TaskStatusService;
+import cn.yearcon.yrcocrmapi.modules.dsb.service.StoreService;
 import cn.yearcon.yrcocrmapi.modules.service.PerformanceService;
 import cn.yearcon.yrcocrmapi.modules.service.SetTargetService;
 import io.swagger.annotations.Api;
@@ -26,6 +27,8 @@ public class TargetController {
     SetTargetService setTargetService;
     @Autowired
     PerformanceService performanceService;
+    @Autowired
+    StoreService storeService;
 
     @RequestMapping(value = "salary.set",method = {RequestMethod.GET,RequestMethod.POST})
     @ApiOperation(value ="设置日工资",notes = "输入今日目标工资")
@@ -33,15 +36,20 @@ public class TargetController {
         return setTargetService.setTargetAndCalculateInfo(username,targetSalary);
     }
     @ApiOperation(value ="获取员工业绩",notes = "输入员工账号和日期")
-    @RequestMapping(value = "performance.get",method = {RequestMethod.GET,RequestMethod.POST})
+    @RequestMapping(value = "performance.get",method = {RequestMethod.GET})
     public JsonResult getPerformance(String username,String beginDate,String endDate){
         return performanceService.getPerformance(username,beginDate,endDate);
     }
 
     @ApiOperation(value ="获取开卡指标",notes = "输入员工账号和日日期")
-    @RequestMapping(value = "opencard.target",method = {RequestMethod.GET,RequestMethod.POST})
+    @RequestMapping(value = "opencard.target",method = {RequestMethod.GET})
     public JsonResult getCardtarget(String username,Integer date){
         return performanceService.getCardTarget(username,date);
+    }
+    @ApiOperation(value ="获取员工所属店铺",notes = "获取员工所属店铺")
+    @RequestMapping(value = "store.get",method = {RequestMethod.GET})
+    public JsonResult getStore(String username){
+        return storeService.findStoreByUsername(username);
     }
 
 }

@@ -34,7 +34,7 @@ public class AidedController {
 
 
     @ApiOperation(value = "注册账号", notes = "注册账号")
-    @RequestMapping(value = "/reg",method = {RequestMethod.GET,RequestMethod.POST})
+    @RequestMapping(value = "/reg",method = {RequestMethod.POST})
     public JsonResult reg(String username,String password,String checkcode,String mobile){
         if(!checkUser(username,password,checkcode,mobile)){
             return new JsonResult(0,"输入参数不完整");
@@ -48,14 +48,14 @@ public class AidedController {
     }
 
     @ApiOperation(value = "获取短信验证码", notes = "输入手机号获取短信验证码")
-    @RequestMapping(value = "/sms.code",method = {RequestMethod.GET,RequestMethod.POST})
+    @RequestMapping(value = "/sms.code",method = {RequestMethod.POST})
     public JsonResult getCheckCode(String mobile){
         JsonResult jsonResult=smsService.sendCheckCode(mobile);
         logger.info(jsonResult.toString());
         return jsonResult;
     }
     @ApiOperation(value = "用户登录", notes = "用户登录")
-    @RequestMapping(value = "/login",method = {RequestMethod.GET,RequestMethod.POST})
+    @RequestMapping(value = "/login",method = {RequestMethod.POST})
     public JsonResult login(String username,String password){
         logger.info("username="+username+",password="+password);
         if(username==null||"".equals(username.trim())){
@@ -77,7 +77,7 @@ public class AidedController {
      * @return
      */
     @ApiOperation(value = "修改密码", notes = "修改密码")
-    @RequestMapping(value = "/update.pwd",method = {RequestMethod.GET,RequestMethod.POST})
+    @RequestMapping(value = "/update.pwd",method = {RequestMethod.POST})
     public JsonResult updatePwd(String username,String mobile,String checkcode,String password){
         if(!checkUser(username,password,checkcode,mobile)){
             return new JsonResult(0,"输入参数不完整");
