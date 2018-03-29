@@ -67,4 +67,8 @@
           login_times=#{loginTimes}
           WHERE id=#{id}
     </update>
+    <select id="findWebidByUsername" parameterType="String" resultType="Integer">
+        SELECT c_customer_id FROM app_employee
+        WHERE username=#{username}
+    </select>
 </mapper>

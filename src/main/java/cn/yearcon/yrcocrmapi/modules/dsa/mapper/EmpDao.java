@@ -13,4 +13,6 @@ public interface EmpDao {
     AppEmployee findByUsername(String username);
 
     int update(AppEmployee AppEmployee);
+
+    int findWebidByUsername(String username);
 }

@@ -1,11 +1,12 @@
 package cn.yearcon.yrcocrmapi.modules.web;
 
 import cn.yearcon.yrcocrmapi.common.json.JsonResult;
+import cn.yearcon.yrcocrmapi.modules.dsa.entity.AppCallog;
 import cn.yearcon.yrcocrmapi.modules.dsa.entity.AppEmployee;
 import cn.yearcon.yrcocrmapi.modules.dsa.service.AppEmpService;
+import cn.yearcon.yrcocrmapi.modules.dsa.service.CallogService;
 import cn.yearcon.yrcocrmapi.modules.service.SmsService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,10 +32,17 @@ public class AidedController {
     private AppEmpService appEmpService;
     @Autowired
     private SmsService smsService;
-
+    @Autowired
+    private CallogService callogService;
 
     @ApiOperation(value = "注册账号", notes = "注册账号")
     @RequestMapping(value = "/reg",method = {RequestMethod.POST})
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "username",value = "员工账号",paramType = "query",dataType = "string",required = true),
+            @ApiImplicitParam(name = "password",value = "密码",paramType = "query",dataType = "string",required = true),
+            @ApiImplicitParam(name = "checkcode",value = "验证码",paramType = "query",dataType = "string",required = true),
+            @ApiImplicitParam(name = "mobile",value = "手机号",paramType = "query",dataType = "string",required = true),
+    })
     public JsonResult reg(String username,String password,String checkcode,String mobile){
         if(!checkUser(username,password,checkcode,mobile)){
             return new JsonResult(0,"输入参数不完整");
@@ -49,6 +57,7 @@ public class AidedController {
 
     @ApiOperation(value = "获取短信验证码", notes = "输入手机号获取短信验证码")
     @RequestMapping(value = "/sms.code",method = {RequestMethod.POST})
+    @ApiImplicitParam(name = "mobile",value = "手机号",paramType = "query",dataType = "string",required = true)
     public JsonResult getCheckCode(String mobile){
         JsonResult jsonResult=smsService.sendCheckCode(mobile);
         logger.info(jsonResult.toString());
@@ -56,6 +65,10 @@ public class AidedController {
     }
     @ApiOperation(value = "用户登录", notes = "用户登录")
     @RequestMapping(value = "/login",method = {RequestMethod.POST})
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "username",value = "员工账号",paramType = "query",dataType = "string",required = true),
+            @ApiImplicitParam(name = "password",value = "密码",paramType = "query",dataType = "string",required = true)
+    })
     public JsonResult login(String username,String password){
         logger.info("username="+username+",password="+password);
         if(username==null||"".equals(username.trim())){
@@ -69,20 +82,74 @@ public class AidedController {
     }
 
     /**
-     * 修改密码
+     * 忘记密码
      * @param username
      * @param mobile
      * @param checkcode
      * @param password
      * @return
      */
-    @ApiOperation(value = "修改密码", notes = "修改密码")
-    @RequestMapping(value = "/update.pwd",method = {RequestMethod.POST})
-    public JsonResult updatePwd(String username,String mobile,String checkcode,String password){
+    @ApiOperation(value = "忘记密码", notes = "忘记密码")
+    @RequestMapping(value = "/forget.pwd",method = {RequestMethod.POST})
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "username",value = "员工账号",paramType = "query",dataType = "string",required = true),
+            @ApiImplicitParam(name = "password",value = "密码",paramType = "query",dataType = "string",required = true),
+            @ApiImplicitParam(name = "checkcode",value = "验证码",paramType = "query",dataType = "string",required = true),
+            @ApiImplicitParam(name = "mobile",value = "手机号",paramType = "query",dataType = "string",required = true)
+    })
+    public JsonResult forgetPwd(String username,String mobile,String checkcode,String password){
         if(!checkUser(username,password,checkcode,mobile)){
             return new JsonResult(0,"输入参数不完整");
         }
-        return appEmpService.updatePwd(username,mobile,checkcode,password);
+        return appEmpService.forgetPwd(username,mobile,checkcode,password);
+    }
+    /**
+     * 修改密码
+     * @param username
+     * @return
+     */
+    @ApiOperation(value = "修改密码", notes = "修改密码")
+    @RequestMapping(value = "/update.pwd",method = {RequestMethod.POST})
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "username",value = "员工账号",paramType = "query",dataType = "string",required = true),
+            @ApiImplicitParam(name = "oldpwd",value = "旧密码",paramType = "query",dataType = "string",required = true),
+            @ApiImplicitParam(name = "newpwd",value = "新密码",paramType = "query",dataType = "string",required = true)
+    })
+    public JsonResult updatePwd(String username,String oldpwd,String newpwd){
+
+        return appEmpService.updatePwd(username,oldpwd,newpwd);
+    }
+    @ApiOperation(value="获取短信模板列表",notes = "获取短信模板列表")
+    @RequestMapping(value = "note.list",method = {RequestMethod.GET})
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "username",value = "员工账号",paramType = "query",dataType = "string",required = true),
+            @ApiImplicitParam(name = "vipid",value = "会员id",paramType = "query",dataType = "int",required = true)
+    })
+    public JsonResult getTemplateList(String username ,Integer vipid){
+        return  smsService.getTemplateList(username,vipid);
+    }
+
+    @ApiOperation(value = "发送短信", notes = "输入手机号和短信内容")
+    @RequestMapping(value = "send.note",method = {RequestMethod.POST})
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "mobile",value = "手机号",paramType = "query",dataType = "string",required = true),
+            @ApiImplicitParam(name = "content",value = "短信内容",paramType = "query",dataType = "string",required = true)
+    })
+    public JsonResult sendNote(String mobile,String content){
+        JsonResult jsonResult=smsService.sendNote(mobile,content);
+        logger.info(jsonResult.toString());
+        return jsonResult;
+    }
+    @RequestMapping(value = "call.log",method = {RequestMethod.POST})
+    @ApiOperation(value = "通话记录",notes = "通话记录")
+    public JsonResult callog(AppCallog callog){
+        try {
+            callogService.insert(callog);
+            return new JsonResult(1,"添加成功");
+        }catch (Exception e){
+            return new JsonResult(0,"添加失败");
+        }
+
     }
 
     /**

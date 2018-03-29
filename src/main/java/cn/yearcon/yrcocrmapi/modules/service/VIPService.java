@@ -200,13 +200,15 @@ public class VIPService {
                 vipStatusList=vipStatusList.stream()
                         .filter(vipInfo ->
                                 vipInfo.getMobile()==null?false:
-                                vipInfo.getMobile().contains(keyword))
+                                vipInfo.getMobile().contains(keyword)
+                                ||keyword.equals(vipInfo.getMobile()))
                         .collect(Collectors.toList());
             }else{
                 vipStatusList=vipStatusList.stream()
                         .filter(vipInfo ->
                                 vipInfo.getVipname()==null?false:
-                                vipInfo.getVipname().contains(keyword))
+                                vipInfo.getVipname().contains(keyword)
+                                ||keyword.equals(vipInfo.getVipname()))
                         .collect(Collectors.toList());
             }
         }

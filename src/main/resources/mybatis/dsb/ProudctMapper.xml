@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.yearcon.yrcocrmapi.modules.dsb.mapper.ProductDao" >
+    <sql id="Base_Column_List">
+      id,
+      name AS productNo
+    </sql>
+    <select id="findList" resultType="Product" parameterType="String">
+      SELECT
+      <include refid="Base_Column_List"/>
+        FROM M_PRODUCT
+        <where>
+            <if test="productNo!=null and productNo!=''">
+               AND name like '%'|| Tools.Utils.Filte(#{productNo}) ||'%'
+            </if>
+            AND rownum &lt;=100
+        </where>
+    </select>
+    
+    <select id="findListByIdAndWebid" resultType="Product">
+        SELECT a.m_product_id as id,
+        d.value2_id AS sizeid,
+        d.value1_id AS colorid,
+        SUM(nvl(a.qty, 0)) AS qty,
+        d.value1_code AS colorCode,
+        d.value2_code AS sizeCode,
+        d.value1 AS color,
+        b.name AS storeName,
+        b.coordinate AS coordinate,
+        a.c_store_id AS storeid
+        FROM fa_storage   a,
+        m_attributesetinstance d,
+        c_store                b
+        WHERE a.c_store_id = b.id
+        AND a.m_product_id =#{id}
+        AND a.m_attributesetinstance_id = d.id
+        AND b.c_storetype_jz_id IN (1,2)
+        AND a.qty >= 1
+        AND ( b.c_customer_id =#{webid})
+
+        GROUP BY a.m_product_id,
+        d.value2_id,
+        d.value1_id,
+        d.value1_code,
+        d.value2_code,
+        d.value1,
+        a.c_store_id ,b.name,b.coordinate
+    </select>
+</mapper>

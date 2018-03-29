@@ -19,5 +19,6 @@
         <typeAlias type="cn.yearcon.yrcocrmapi.modules.dsa.entity.TargetSalary" alias="TargetSalary"></typeAlias>
         <typeAlias type="cn.yearcon.yrcocrmapi.modules.dsa.entity.Salary" alias="Salary"></typeAlias>
         <typeAlias type="cn.yearcon.yrcocrmapi.modules.dsa.entity.Usertaskstatus" alias="Usertaskstatus"></typeAlias>
+        <typeAlias type="cn.yearcon.yrcocrmapi.modules.dsb.entity.Product" alias="Product"></typeAlias>
     </typeAliases>
 </configuration>

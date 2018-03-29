@@ -25,6 +25,15 @@ public class NoteTemplate {
     private String webid;
 
 
+    @Override
+    public String toString() {
+        return "NoteTemplate{" +
+                "id='" + id + '\'' +
+                ", title='" + title + '\'' +
+                ", content='" + content + '\'' +
+                ", webid='" + webid + '\'' +
+                '}';
+    }
 
     @Override
     public boolean equals(Object o) {

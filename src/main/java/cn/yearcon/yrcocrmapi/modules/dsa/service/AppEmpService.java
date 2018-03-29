@@ -85,19 +85,20 @@ public class AppEmpService {
         }
         byUsername.setLoginDate(new Date());
         byUsername.setLoginTimes((byUsername.getLoginTimes()+1));
+        byUsername.setKey(MD5Util.getMD5(GetRandomUtil.getRandomStr(6)));
         empDao.update(byUsername);
         return new JsonResult(1,"登陆成功",byUsername.getKey());
     }
 
     /**
-     * 修改密码
+     * 忘记密码
      * @param username
      * @param mobile
      * @param checkcode
      * @param password
      * @return
      */
-    public JsonResult updatePwd(String username,String mobile,String checkcode,String password){
+    public JsonResult forgetPwd(String username,String mobile,String checkcode,String password){
         AppEmployee byUsername = empDao.findByUsername(username);
         String code=stringRedisTemplate.opsForValue().get("smscodeMobile="+mobile);
         if(!checkcode.equals(code)){
@@ -109,9 +110,29 @@ public class AppEmpService {
         String message=MD5Util.getMD5(password);
         byUsername.setPassword(message);
         byUsername.setUpdateDate(new Date());
+        empDao.update(byUsername);
         return new JsonResult(1,"修改成功");
     }
-
+    /**
+     * 修改密码
+     * @param username
+     * @return
+     */
+    public JsonResult updatePwd(String username,String oldpassword,String newpassword){
+        AppEmployee byUsername = empDao.findByUsername(username);
+        if(byUsername==null){
+            return new JsonResult(0,"用户名或密码错误");
+        }
+        String message=MD5Util.getMD5(oldpassword);
+        if(!message.equals(byUsername.getPassword())){
+            return new JsonResult(0,"用户名或密码错误");
+        }
+        message=MD5Util.getMD5(newpassword);
+        byUsername.setPassword(message);
+        byUsername.setUpdateDate(new Date());
+        empDao.update(byUsername);
+        return new JsonResult(1,"修改成功");
+    }
     /**
      * 根据用户名获取员工信息
      * @param username
