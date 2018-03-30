@@ -31,8 +31,6 @@ public class VIPService {
     @Autowired
     private VIPInfoMapper vipInfoMapper;
     @Autowired
-    private TaskStatusDao taskStatusDao;
-    @Autowired
     private TaskStatusService taskStatusService;
 
     /**
@@ -100,8 +98,8 @@ public class VIPService {
     public JsonResult findVipListBySearch(String username, Integer storeid, DefinedSearch definedSearch){
         //获取沉睡会员列表
         List<VIPInfo> vipStatusList=vipInfoMapper.getVIPByStore(username,storeid);
+        getStatusCount(vipStatusList,username);//获取处理时间,次数
         if (definedSearch==null){
-            getStatusCount(vipStatusList,username);//获取处理时间,次数
             return new JsonResult(1,vipStatusList);
         }
         String birthday=definedSearch.getBirthday();

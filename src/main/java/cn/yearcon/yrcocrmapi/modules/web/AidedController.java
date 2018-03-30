@@ -16,6 +16,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.spring.web.json.Json;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 /**
  * 辅助功能接口
  *
@@ -69,7 +72,8 @@ public class AidedController {
             @ApiImplicitParam(name = "username",value = "员工账号",paramType = "query",dataType = "string",required = true),
             @ApiImplicitParam(name = "password",value = "密码",paramType = "query",dataType = "string",required = true)
     })
-    public JsonResult login(String username,String password){
+    public JsonResult login(String username, String password,
+                            HttpServletRequest request, HttpServletResponse response){
         logger.info("username="+username+",password="+password);
         if(username==null||"".equals(username.trim())){
             return new JsonResult(0,"用户名不能为空");
@@ -78,7 +82,7 @@ public class AidedController {
             return new JsonResult(0,"密码不能为空");
         }
 
-        return appEmpService.login(username,password);
+        return appEmpService.login(username,password,request,response);
     }
 
     /**

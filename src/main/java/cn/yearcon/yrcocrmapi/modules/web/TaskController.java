@@ -126,7 +126,7 @@ public class TaskController {
             @ApiImplicitParam(name = "storeid", value = "店铺id",paramType = "query",dataType = "int",required =true)
     })
     public JsonResult findVipListDefind(String username,Integer storeid, DefinedSearch definedSearch){
-        logger.info("username="+username+",storeid="+storeid);
+        logger.info("username="+username+",storeid="+storeid+",definedSearch="+definedSearch);
         if (username==null||"".equals(username.trim())){
             return  new JsonResult(0,"参数不能为空");
         }

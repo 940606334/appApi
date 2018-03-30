@@ -1,6 +1,7 @@
 package cn.yearcon.yrcocrmapi.modules.dsa.service;
 
 import cn.yearcon.yrcocrmapi.common.json.JsonResult;
+import cn.yearcon.yrcocrmapi.common.util.CookieUtil;
 import cn.yearcon.yrcocrmapi.common.util.GetRandomUtil;
 import cn.yearcon.yrcocrmapi.common.util.MD5Util;
 import cn.yearcon.yrcocrmapi.modules.dsa.entity.AppEmployee;
@@ -13,6 +14,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
 
 /**
@@ -73,7 +77,8 @@ public class AppEmpService {
      * @param password
      * @return
      */
-    public JsonResult login(String username,String password){
+    public JsonResult login(String username, String password,
+                            HttpServletRequest request, HttpServletResponse response){
         AppEmployee byUsername = empDao.findByUsername(username);
         logger.info(byUsername.toString());
         if (byUsername==null){
@@ -87,6 +92,9 @@ public class AppEmpService {
         byUsername.setLoginTimes((byUsername.getLoginTimes()+1));
         byUsername.setKey(MD5Util.getMD5(GetRandomUtil.getRandomStr(6)));
         empDao.update(byUsername);
+        request.getSession().setAttribute(username+"key",byUsername.getKey());
+        CookieUtil.setCookie(response,"app_username",username);
+        CookieUtil.setCookie(response,"app_key",byUsername.getKey());
         return new JsonResult(1,"登陆成功",byUsername.getKey());
     }
 
