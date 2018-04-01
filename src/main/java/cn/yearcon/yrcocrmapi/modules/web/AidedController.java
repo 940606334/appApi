@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -41,10 +42,10 @@ public class AidedController {
     @ApiOperation(value = "注册账号", notes = "注册账号")
     @RequestMapping(value = "/reg",method = {RequestMethod.POST})
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "username",value = "员工账号",paramType = "query",dataType = "string",required = true),
-            @ApiImplicitParam(name = "password",value = "密码",paramType = "query",dataType = "string",required = true),
-            @ApiImplicitParam(name = "checkcode",value = "验证码",paramType = "query",dataType = "string",required = true),
-            @ApiImplicitParam(name = "mobile",value = "手机号",paramType = "query",dataType = "string",required = true),
+            @ApiImplicitParam(name = "username",value = "员工账号",paramType = "form",dataType = "string",required = true),
+            @ApiImplicitParam(name = "password",value = "密码",paramType = "form",dataType = "string",required = true),
+            @ApiImplicitParam(name = "checkcode",value = "验证码",paramType = "form",dataType = "string",required = true),
+            @ApiImplicitParam(name = "mobile",value = "手机号",paramType = "form",dataType = "string",required = true),
     })
     public JsonResult reg(String username,String password,String checkcode,String mobile){
         if(!checkUser(username,password,checkcode,mobile)){
@@ -60,7 +61,7 @@ public class AidedController {
 
     @ApiOperation(value = "获取短信验证码", notes = "输入手机号获取短信验证码")
     @RequestMapping(value = "/sms.code",method = {RequestMethod.POST})
-    @ApiImplicitParam(name = "mobile",value = "手机号",paramType = "query",dataType = "string",required = true)
+    @ApiImplicitParam(name = "mobile",value = "手机号",paramType = "form",dataType = "string",required = true)
     public JsonResult getCheckCode(String mobile){
         JsonResult jsonResult=smsService.sendCheckCode(mobile);
         logger.info(jsonResult.toString());
@@ -69,8 +70,8 @@ public class AidedController {
     @ApiOperation(value = "用户登录", notes = "用户登录")
     @RequestMapping(value = "/login",method = {RequestMethod.POST})
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "username",value = "员工账号",paramType = "query",dataType = "string",required = true),
-            @ApiImplicitParam(name = "password",value = "密码",paramType = "query",dataType = "string",required = true)
+            @ApiImplicitParam(name = "username",value = "员工账号",dataType = "string",paramType = "form",required = true),
+            @ApiImplicitParam(name = "password",value = "密码",dataType = "string",paramType = "form",required = true)
     })
     public JsonResult login(String username, String password,
                             HttpServletRequest request, HttpServletResponse response){
@@ -96,10 +97,10 @@ public class AidedController {
     @ApiOperation(value = "忘记密码", notes = "忘记密码")
     @RequestMapping(value = "/forget.pwd",method = {RequestMethod.POST})
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "username",value = "员工账号",paramType = "query",dataType = "string",required = true),
-            @ApiImplicitParam(name = "password",value = "密码",paramType = "query",dataType = "string",required = true),
-            @ApiImplicitParam(name = "checkcode",value = "验证码",paramType = "query",dataType = "string",required = true),
-            @ApiImplicitParam(name = "mobile",value = "手机号",paramType = "query",dataType = "string",required = true)
+            @ApiImplicitParam(name = "username",value = "员工账号",paramType = "form",dataType = "string",required = true),
+            @ApiImplicitParam(name = "password",value = "密码",paramType = "form",dataType = "string",required = true),
+            @ApiImplicitParam(name = "checkcode",value = "验证码",paramType = "form",dataType = "string",required = true),
+            @ApiImplicitParam(name = "mobile",value = "手机号",paramType = "form",dataType = "string",required = true)
     })
     public JsonResult forgetPwd(String username,String mobile,String checkcode,String password){
         if(!checkUser(username,password,checkcode,mobile)){
@@ -115,9 +116,9 @@ public class AidedController {
     @ApiOperation(value = "修改密码", notes = "修改密码")
     @RequestMapping(value = "/update.pwd",method = {RequestMethod.POST})
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "username",value = "员工账号",paramType = "query",dataType = "string",required = true),
-            @ApiImplicitParam(name = "oldpwd",value = "旧密码",paramType = "query",dataType = "string",required = true),
-            @ApiImplicitParam(name = "newpwd",value = "新密码",paramType = "query",dataType = "string",required = true)
+            @ApiImplicitParam(name = "username",value = "员工账号",paramType = "form",dataType = "string",required = true),
+            @ApiImplicitParam(name = "oldpwd",value = "旧密码",paramType = "form",dataType = "string",required = true),
+            @ApiImplicitParam(name = "newpwd",value = "新密码",paramType = "form",dataType = "string",required = true)
     })
     public JsonResult updatePwd(String username,String oldpwd,String newpwd){
 
@@ -136,8 +137,8 @@ public class AidedController {
     @ApiOperation(value = "发送短信", notes = "输入手机号和短信内容")
     @RequestMapping(value = "send.note",method = {RequestMethod.POST})
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "mobile",value = "手机号",paramType = "query",dataType = "string",required = true),
-            @ApiImplicitParam(name = "content",value = "短信内容",paramType = "query",dataType = "string",required = true)
+            @ApiImplicitParam(name = "mobile",value = "手机号",paramType = "form",dataType = "string",required = true),
+            @ApiImplicitParam(name = "content",value = "短信内容",paramType = "form",dataType = "string",required = true)
     })
     public JsonResult sendNote(String mobile,String content){
         JsonResult jsonResult=smsService.sendNote(mobile,content);
@@ -146,7 +147,7 @@ public class AidedController {
     }
     @RequestMapping(value = "call.log",method = {RequestMethod.POST})
     @ApiOperation(value = "通话记录",notes = "通话记录")
-    public JsonResult callog(AppCallog callog){
+    public JsonResult callog(@RequestBody @ApiParam(name="通话记录实体",value="传入json格式",required=true)AppCallog callog){
         try {
             callogService.insert(callog);
             return new JsonResult(1,"添加成功");

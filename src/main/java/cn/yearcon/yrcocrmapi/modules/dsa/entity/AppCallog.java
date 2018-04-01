@@ -1,7 +1,9 @@
 package cn.yearcon.yrcocrmapi.modules.dsa.entity;
 
+import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import io.swagger.annotations.ApiParam;
 import lombok.Data;
 import springfox.documentation.annotations.ApiIgnore;
 
@@ -15,6 +17,7 @@ import java.util.Objects;
 
 @Data
 @ApiModel(value = "DefinedSearch")
+
 public class AppCallog {
     @ApiModelProperty(hidden=true)
     private int id;

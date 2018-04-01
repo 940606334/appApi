@@ -80,10 +80,11 @@ public class AppEmpService {
     public JsonResult login(String username, String password,
                             HttpServletRequest request, HttpServletResponse response){
         AppEmployee byUsername = empDao.findByUsername(username);
-        logger.info(byUsername.toString());
         if (byUsername==null){
             return new JsonResult(0,"用户名或密码错误");
         }
+        logger.info(byUsername.toString());
+
         String loginpass=MD5Util.getMD5(password);
         if(!loginpass.equals(byUsername.getPassword())){
             return new JsonResult(0,"用户名或密码错误");
