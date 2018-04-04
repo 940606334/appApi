@@ -94,7 +94,7 @@ public class AppEmpService {
         byUsername.setKey(MD5Util.getMD5(GetRandomUtil.getRandomStr(6)));
         empDao.update(byUsername);
         request.getSession().setAttribute(username+"key",byUsername.getKey());
-        CookieUtil.setCookie(response,"app_username",username);
+        CookieUtil.setCookie(response,"username",username);
         CookieUtil.setCookie(response,"app_key",byUsername.getKey());
         return new JsonResult(1,"登陆成功",byUsername.getKey());
     }

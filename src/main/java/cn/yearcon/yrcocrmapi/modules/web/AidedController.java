@@ -63,6 +63,7 @@ public class AidedController {
     @RequestMapping(value = "/sms.code",method = {RequestMethod.POST})
     @ApiImplicitParam(name = "mobile",value = "手机号",paramType = "form",dataType = "string",required = true)
     public JsonResult getCheckCode(String mobile){
+        logger.info("mobile="+mobile);
         JsonResult jsonResult=smsService.sendCheckCode(mobile);
         logger.info(jsonResult.toString());
         return jsonResult;

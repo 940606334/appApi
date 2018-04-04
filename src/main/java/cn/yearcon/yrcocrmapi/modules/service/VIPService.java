@@ -6,6 +6,7 @@ import cn.yearcon.yrcocrmapi.modules.dsa.entity.Usertaskstatus;
 import cn.yearcon.yrcocrmapi.modules.dsa.mapper.TaskStatusDao;
 import cn.yearcon.yrcocrmapi.modules.dsa.service.TaskStatusService;
 import cn.yearcon.yrcocrmapi.modules.dsb.entity.VIPInfo;
+import cn.yearcon.yrcocrmapi.modules.dsb.mapper.StoreDao;
 import cn.yearcon.yrcocrmapi.modules.dsb.mapper.VIPInfoDao;
 import cn.yearcon.yrcocrmapi.modules.dsb.mapper.VIPInfoMapper;
 import cn.yearcon.yrcocrmapi.modules.dsb.service.VIPInfoService;
@@ -33,13 +34,15 @@ public class VIPService {
     @Autowired
     private TaskStatusService taskStatusService;
 
+    @Autowired
+    private StoreDao storeDao;
+
     /**
      * 获取会员状态列表
      * @param username
-     * @param storeid
      * @return
      */
-    public VIPStatus vipList(String username,Integer storeid){
+    public VIPStatus vipList(String username){
         //获取七天内会员消费记录
         //获取当前时间
         List<VIPInfo> sevenDayList =getListBySevenDayBack(username);
@@ -50,6 +53,9 @@ public class VIPService {
         int waken=getStatusCount(sevenDayList,username);//7天回访已唤醒数
         int[] sevenDayNum={sevenDayList.size()-waken,waken};//7天回访
         vipStatus.setSevenDayNum(sevenDayNum);
+
+        //获取店铺id
+        int storeid= storeDao.findByUsername(username).getId();
 
         //获取沉睡会员列表
         List<VIPInfo> vipStatusList=vipInfoMapper.getVIPByStore(username,storeid);
@@ -236,13 +242,27 @@ public class VIPService {
     /**
      * 根据会员状态返回会员列表
      * @param username
-     * @param storeid
      * @param vipStatus 1.激活 2.流失 3.修眠 4.睡眠 5.开卡未消费
      * @return
      */
-    public JsonResult wakenVipStatusList(String username,Integer storeid,String vipStatus){
+    public JsonResult wakenVipStatusList(String username,String vipStatus){
+        //获取店铺id
+        int storeid= storeDao.findByUsername(username).getId();
         //获取沉睡会员列表
         List<VIPInfo> vipStatusList=vipInfoMapper.getVIPByStore(username,storeid);
+        //判断是否为会员状态6 生日关怀
+        if("6".equals(vipStatus)){
+            List<VIPInfo> vipBirthdayList=vipStatusList.stream() //生日关怀
+                    .filter(vipInfo -> DateUtil.isbirthday(vipInfo.getBirthday()))
+                    .collect(Collectors.toList());
+            getStatusCount(vipBirthdayList,username);
+            return new JsonResult(1,vipBirthdayList);
+        }
+        if("7".equals(vipStatus)){//判断会员状态是否为7 7天返回
+            List<VIPInfo> sevenDayList=getListBySevenDayBack(username);
+            getStatusCount(sevenDayList,username);
+            return new JsonResult(1,sevenDayList);
+        }
         List<VIPInfo> wakenVipStatusList=findListByStatus(vipStatus,vipStatusList);//5开卡未消费
         getStatusCount(wakenVipStatusList,username);
         return new JsonResult(1,wakenVipStatusList);
@@ -251,10 +271,11 @@ public class VIPService {
     /**
      * 获取生日关怀列表
      * @param username
-     * @param storeid
      * @return
      */
-    public JsonResult wakenBirthdayList(String username,Integer storeid){
+    public JsonResult wakenBirthdayList(String username){
+        //获取店铺id
+        int storeid= storeDao.findByUsername(username).getId();
         //获取沉睡会员列表
         List<VIPInfo> vipStatusList=vipInfoMapper.getVIPByStore(username,storeid);
         List<VIPInfo> vipBirthdayList=vipStatusList.stream() //生日关怀

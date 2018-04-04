@@ -13,25 +13,24 @@ import java.util.Map;
  **/
 @Data
 public class JsonResult {
-    private Integer status;
-    private List list=new ArrayList();
+    private Integer code;
     private String msg;
     private Object data;
     private String key;
 
-    public JsonResult(Integer status, String msg, String key) {
-        this.status = status;
+    public JsonResult(Integer code, String msg, String key) {
+        this.code = code;
         this.msg = msg;
         this.key = key;
     }
 
-    public JsonResult(Integer status, Object data) {
-        this.status = status;
+    public JsonResult(Integer code, Object data) {
+        this.code = code;
         this.data = data;
     }
 
-    public JsonResult(Integer status, String msg) {
-        this.status = status;
+    public JsonResult(Integer code, String msg) {
+        this.code = code;
         this.msg = msg;
     }
 
@@ -39,16 +38,10 @@ public class JsonResult {
 
     }
 
-    public JsonResult(Integer status, List list) {
-        this.status = status;
-        this.list = list;
-    }
-
     @Override
     public String toString() {
         return "JsonResult{" +
-                "status=" + status +
-                ", list=" + list +
+                "code=" + code +
                 ", msg='" + msg + '\'' +
                 ", data=" + data +
                 ", key='" + key + '\'' +

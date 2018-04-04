@@ -27,14 +27,16 @@ public class KeyInterceptor implements HandlerInterceptor {
             throws Exception {
         logger.info(">>>MyInterceptor1>>>>>>>在请求处理之前进行调用（Controller方法调用之前）");
         //AppEmpService appEmpService=new AppEmpService();
-        String username=CookieUtil.getCookie(request,"app_username");
+        /*String username=CookieUtil.getCookie(request,"username");
+        logger.info(username);
         String key=CookieUtil.getCookie(request,"app_key");
+        logger.info(key);
         String realKey=(String) request.getSession().getAttribute(username+"key");
         if(key==null||key==""){
             return false;
         }
-        return key.equals(realKey);
-        //return true;// 只有返回true才会继续向下执行，返回false取消当前请求
+        return key.equals(realKey);*/
+        return true;// 只有返回true才会继续向下执行，返回false取消当前请求
     }
 
     @Override

@@ -34,13 +34,13 @@
 3.配置多个数据源分别为mysql,oracle
 
     ##mysql库
-    spring.db1.datasource.jdbcUrl=jdbc:mysql://192.168.80.175:3306/yrcappdb?characterEncoding=UTF-8
-    spring.db1.datasource.username=root
-    spring.db1.datasource.password=aa123456
+    spring.db1.datasource.jdbcUrl=jdbc:mysql://xxx.xxx.xx.xxx:3306/XXXX?characterEncoding=UTF-8
+    spring.db1.datasource.username=xxxx
+    spring.db1.datasource.password=xxxx
     spring.db1.datasource.driver-class-name=com.mysql.jdbc.Driver
     
     ##oracle库
     spring.db2.datasource.driver-class-name=oracle.jdbc.driver.OracleDriver
-    spring.db2.datasource.jdbcUrl=jdbc:oracle:thin:@//192.168.80.128:1521/portaldb
-    spring.db2.datasource.username=neands3
-    spring.db2.datasource.password=abc123
+    spring.db2.datasource.jdbcUrl=jdbc:oracle:thin:@//xxx.xxx.xx.xxx:1521/xxx
+    spring.db2.datasource.username=xxxx
+    spring.db2.datasource.password=xxxx

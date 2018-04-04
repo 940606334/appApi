@@ -80,10 +80,7 @@ public class SmsService {
      * @return
      */
     public JsonResult sendNote(String mobile,String content){
-        String url="http://192.168.80.151:9899/req/?" +
-                "id=3&key=t4dyuwaovfuqkmcg&" +
-                "content=" +content+
-                "&mobiles="+mobile+"&type=2";
+        String url="xxxxx.xxxx";
         try {
             new HttpRequestUtils().getHttp(url);
         }catch (Exception e){
